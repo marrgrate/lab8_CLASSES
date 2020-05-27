@@ -20,6 +20,8 @@ public:
     {
         Size = size;
         array = new Type[Size];
+        for(int i = 0; i < Size; i++)
+            array[i] = 0;
     }
     Vector(int size, Type n)
     {
@@ -38,6 +40,7 @@ public:
     ~Vector() { delete[] array; }
 
     void SetSize(int n);
+    void Resize(int n);
     int GetSize();
     void InitVectorRandom();
     void ShowVector();
@@ -51,9 +54,27 @@ public:
 template<typename Type>
 void Vector<Type>::SetSize(int n)
 {
-    Size = n;
-    delete[] array;
-    array = new Type[Size];
+    if (n <= 0) Size = 1;
+    else Size = n;
+}
+
+template<typename Type>
+void Vector<Type>::Resize(int n)
+{
+    if (n < Size)
+        SetSize(n);
+    else
+    {
+        Vector<Type> temp(*this);
+        delete[] array;
+        array = new Type[n];
+        int i;
+        for (i = 0; i < Size; i++)
+            array[i] = temp.array[i];
+        SetSize(n);
+        while (i < Size)
+            array[i++] = 0;
+    }
 }
 
 template<class Type>
